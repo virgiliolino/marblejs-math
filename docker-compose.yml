@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   node:
-    image: node:8
+    image: node:14.13
     user: node
     working_dir: /home/node/app
     environment:

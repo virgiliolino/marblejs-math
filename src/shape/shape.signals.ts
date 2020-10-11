@@ -20,10 +20,7 @@ export const CreateRectangleCommand =
     }));
 
 export const CreateEllipseCommand =
-    event(ShapeCommandType.CREATE_ELLIPSE)(t.type({
-        firstName: t.string,
-        lastName: t.string,
-    }));
+    event(ShapeCommandType.CREATE_ELLIPSE)(ellipseSchema);
 
 export const DestroyShapeCommand =
     event(ShapeCommandType.DESTROY_SHAPE)(t.type({

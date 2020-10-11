@@ -6,9 +6,8 @@ import { IO } from 'fp-ts/lib/IO';
 import {logger$} from "@marblejs/middleware-logger";
 import {bodyParser$} from "@marblejs/middleware-body";
 import {api$} from "./api.effects";
-import "reflect-metadata";
-import {createConnection} from "typeorm";
-import {Ellipse, rectangle} from "./shape/shapes";
+import { PrismaClient } from "@prisma/client"
+import {Ellipse} from "./shape/shapes";
 import {AppParameters, createAppConfig, createServerConfig} from "./config.helper";
 import {DBConnectionToken} from "./dependencies";
 import {postShape$} from "./shape/effects/postShape.effect";
@@ -22,39 +21,26 @@ require('dotenv').config()
 const middlewares = [ logger$(), bodyParser$(), ];
 const effects = [ api$, postShape$];
 const appParameters: AppParameters = createAppConfig(process.env);
+const prisma = new PrismaClient()
 
 const eventBusListener = messagingListener({
   effects: [
     createEllipse$,
   ],
 });
-createConnection({
-  type: "postgres",
-  host: appParameters.db_host,
-  port: appParameters.db_port,
-  username: appParameters.db_username,
-  password: appParameters.db_password,
-  database: appParameters.db_name,
-  entities: [
-    Ellipse, rectangle
-  ],
-  synchronize: true,
-  logging: false
-}).then(async connection => {
-  const serverConfig = createServerConfig(
-      appParameters,
-      httpListener({ middlewares,  effects, }),
-      [
-        bindEagerlyTo(EventBusClientToken)(eventBusClient),
-        bindEagerlyTo(EventBusToken)(eventBus({ listener: eventBusListener })),
-        bindTo(DBConnectionToken)(pipe(reader, R.map(() => connection)))
-      ]
-  );
-  const server = createServer(serverConfig);
+const serverConfig = createServerConfig(
+    appParameters,
+    httpListener({ middlewares,  effects, }),
+    [
+      bindEagerlyTo(EventBusClientToken)(eventBusClient),
+      bindEagerlyTo(EventBusToken)(eventBus({ listener: eventBusListener })),
+      bindTo(DBConnectionToken)(pipe(reader, R.map(() => prisma)))
+    ]
+);
+const server = createServer(serverConfig);
 
-  const main: IO<void> = async () =>
-      await (await server)();
-  main();
+const main: IO<void> = async () =>
+    await (await server)();
+main();
 
-}).catch(error => console.log(error));
 

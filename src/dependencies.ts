@@ -2,7 +2,7 @@ import { createContextToken, reader, createReader } from '@marblejs/core';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as R from 'fp-ts/lib/Reader';
 import * as O from 'fp-ts/lib/Option';
-import { Connection } from "typeorm";
+import {PrismaClient} from "@prisma/client/scripts/default-index";
 
 export const Dependency1Token = createContextToken<string>('DBConnection');
 export const Dependency2Token = createContextToken<string>('Dependency2');
@@ -14,7 +14,7 @@ export const Dependency2 = pipe(reader, R.map(ask => pipe(
     O.getOrElse(() => ''),
 )));
 
-export const DBConnectionToken = createContextToken<Connection>('DBConnection');
+export const DBConnectionToken = createContextToken<PrismaClient>('DBConnection');
 //export const DBConnection = createReader(ask => )
 //export const Dependency2 = createReader(ask =>
  //   useContext(Dependency1Token)(ask) + ', world!');

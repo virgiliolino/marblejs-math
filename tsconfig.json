@@ -1,15 +1,24 @@
 {
    "compilerOptions": {
-      "lib": [
-         "es5",
-         "es6"
-      ],
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
-   }
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "noEmitOnError": true,
+      "pretty": true,
+      "strict": true,
+      "target": "es6",
+      "outDir": "./dist/",
+      "rootDir": "./src",
+      "sourceMap": true,
+      "typeRoots": [
+         "node_modules/@types"
+      ],
+      "lib": [
+         "ES2020"
+      ]
+   },
+   "inputs": [
+      "src"
+   ]
 }
