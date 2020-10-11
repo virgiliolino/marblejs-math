@@ -1,8 +1,3 @@
-# Awesome Project Build with TypeORM
+# Proof of Concept of marble.js
 
-Steps to run this project:
-
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
-# marblejs-math
+We consider this framework a possible candidate for building our reactive solutions. We come from a functional background, liked the proposals included in rx.js and considered marble.js the natural implication.
